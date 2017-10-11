@@ -1,9 +1,4 @@
-import sys
-
-from solid import *
-from solid.utils import *
-
-SEGMENTS = 48
+from basis import *
 
 legHeight = 8
 legWidth = 1.5
@@ -26,7 +21,7 @@ def oldXRange(start, end, step):
         yield x
         x += step
 
-if __name__ == '__main__':
+def target():
     rail = translate([channelLength / 2 * -1, channelHeight / 2 * -1, channelWidth / 2])(
         rotate([0,90,0])(
             linear_extrude(channelLength)(
@@ -60,10 +55,7 @@ if __name__ == '__main__':
         legs.append(leg)
     rail = union()(rail, *legs)
 
+    return rail
 
-    filename = sys.argv[0] + '.scad'
-
-    with open(filename, 'w') as f:
-        f.write('$fn = %s;'%(SEGMENTS,))
-        f.write('\n')
-        f.write(scad_render(rail))
+if __name__ == '__main__':
+    render(target)
