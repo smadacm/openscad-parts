@@ -15,12 +15,6 @@ lightSpacing = 4
 lightMargin = lightSpacing / 2
 lightRadius = 0.25
 
-def oldXRange(start, end, step):
-    x = start
-    while x < end:
-        yield x
-        x += step
-
 def target():
     rail = translate([channelLength / 2 * -1, channelHeight / 2 * -1, channelWidth / 2])(
         rotate([0,90,0])(
