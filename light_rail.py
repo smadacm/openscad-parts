@@ -8,17 +8,19 @@ SEGMENTS = 48
 legHeight = 8
 legWidth = 1.5
 legThickness = 1/8
+legSpacing = 12
+legMargin = legSpacing / 2
 
 channelHeight = 1.5
 channelWidth = 1.5
-channelLength = 120 # 10 feet
+channelLength = 72 # 6 feet
 channelThickness = 1/8
 
 lightSpacing = 4
 lightMargin = lightSpacing / 2
 lightRadius = 0.25
 
-def lightRange(start, end, step):
+def oldXRange(start, end, step):
     x = start
     while x < end:
         yield x
@@ -40,12 +42,23 @@ if __name__ == '__main__':
     )
 
     toRemove = []
-    for x in lightRange((channelLength - lightMargin) / 2 * -1, (channelLength - lightMargin) / 2, lightSpacing):
+    for x in oldXRange((channelLength - lightMargin) / 2 * -1, (channelLength - lightMargin) / 2, lightSpacing):
         cyl = translate([x, 0, 0])(
             cylinder(r=lightRadius, h=channelHeight, center=True)
         )
         toRemove.append(cyl)
     rail = difference()(rail, *toRemove)
+
+    legs = []
+    legZ = (legHeight / 2 * -1) + channelHeight / 2 - channelThickness
+    legYLeft = channelWidth / 2 - channelThickness
+    legYRight = legYLeft * -1
+    for i,x in enumerate(oldXRange((channelLength - legMargin) / 2 * -1, (channelLength - legMargin) / 2, legSpacing)):
+        leg = translate([x, legYLeft if i%2 else legYRight, legZ])(
+            cube([legWidth, legThickness, legHeight], center=True)
+        )
+        legs.append(leg)
+    rail = union()(rail, *legs)
 
 
     filename = sys.argv[0] + '.scad'
